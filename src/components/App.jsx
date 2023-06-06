@@ -1,4 +1,3 @@
-import React, { Suspense } from 'react';
 import { Header, Link, Container } from './App.styled';
 import { Routes, Route } from 'react-router-dom';
 import { Home } from './Home/Home';
@@ -8,7 +7,6 @@ import { Cast } from './Cast/Cast';
 import { Reviews } from './Reviews/Reviews';
 import { Movies } from './Movies/Movies';
 import { useNavigate } from 'react-router-dom';
-import { lazy } from 'react';
 
 export const App = () => {
   const [selectedMovie, setSelectedMovie] = useState();
