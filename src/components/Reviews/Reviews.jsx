@@ -7,36 +7,35 @@ export const Reviews = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    fetchReviews();
-  }, []);
+    const fetchReviews = async () => {
+      const options = {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          Authorization:
+            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyNzhiMWJkMjk1YWUyZGI4YWYzMjhjNWE5ZDQzMGE3NyIsInN1YiI6IjY0N2IxYmE1ZTMyM2YzMDEwNjE1MDc1MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vxLHfnX6-9KADyJ-ltI_WHyCFtNAuDJ1qUjAWK6Nndc',
+        },
+      };
 
-  const fetchReviews = async () => {
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyNzhiMWJkMjk1YWUyZGI4YWYzMjhjNWE5ZDQzMGE3NyIsInN1YiI6IjY0N2IxYmE1ZTMyM2YzMDEwNjE1MDc1MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vxLHfnX6-9KADyJ-ltI_WHyCFtNAuDJ1qUjAWK6Nndc',
-      },
+      try {
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/reviews?language=en-US&page=1`,
+          options
+        );
+
+        const data = await response.json();
+
+        const savedReviews = data.results;
+
+        console.log('here are saved reviews from the fetch', savedReviews);
+
+        setReviews(savedReviews);
+      } catch (error) {
+        console.error('Error while fetching reviews', error);
+      }
     };
-
-    try {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/${id}/reviews?language=en-US&page=1`,
-        options
-      );
-
-      const data = await response.json();
-
-      const savedReviews = data.results;
-
-      console.log('here are saved reviews from the fetch', savedReviews);
-
-      setReviews(savedReviews);
-    } catch (error) {
-      console.error('Error while fetching reviews', error);
-    }
-  };
+    fetchReviews();
+  }, [id]);
 
   useEffect(() => {
     console.log('here are reviews from the state', reviews);

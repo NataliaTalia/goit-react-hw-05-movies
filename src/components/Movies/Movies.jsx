@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import { Trending } from '../Home/Home.styled';
 import { useSearchParams } from 'react-router-dom';
 
 export const Movies = ({ onSubmit, searchedMovies, onClickMovie }) => {
-  const [movieName, setMovieName] = useState('');
+  //   const [movieName, setMovieName] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
   const filmName = searchParams.get('name') || '';
