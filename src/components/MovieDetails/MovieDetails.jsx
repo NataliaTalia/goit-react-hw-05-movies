@@ -59,12 +59,12 @@ export const MovieDetails = ({ movie, searchedMovie }) => {
   function formatAsPercentage(num) {
     return 100 - (100 - num * 10) + '%';
   }
-  // const goBackToPage = searchedMovie ? '/movies' : '/';
+  const goBackToPage = searchedMovie ? '/movies?' : '/';
   const navigate = useNavigate();
   console.log('Genres Name', genreNames);
   return (
     <main>
-      <button type="button" onClick={() => navigate(-1)}>
+      <button type="button" onClick={() => navigate(goBackToPage)}>
         Go back
       </button>
       <img src={movieImage} alt={title} />
