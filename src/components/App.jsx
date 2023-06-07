@@ -72,7 +72,7 @@ export const App = () => {
 
   console.log('selected movies, checking if it was set', selectedMovie);
   console.log('movies in Home component:', trendingMovies);
-
+  console.log('TRENDING MOVIES', trendingMovies);
   const navigate = useNavigate();
 
   return (
@@ -80,13 +80,16 @@ export const App = () => {
       <Container>
         <Header>
           <nav>
-            <Link to="/">Home</Link>
+            <Link to="/" end>
+              Home
+            </Link>
             <Link to="/movies">Movies</Link>
           </nav>
         </Header>
         <Routes>
           <Route
             path="/"
+            index
             element={
               <Home movies={trendingMovies} onClickMovie={handleMovieClick} />
             }

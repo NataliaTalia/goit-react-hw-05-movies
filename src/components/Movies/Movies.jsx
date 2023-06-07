@@ -1,5 +1,6 @@
 import { Trending } from '../Home/Home.styled';
 import { useSearchParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 export const Movies = ({ onSubmit, searchedMovies, onClickMovie }) => {
   //   const [movieName, setMovieName] = useState('');
@@ -54,4 +55,15 @@ export const Movies = ({ onSubmit, searchedMovies, onClickMovie }) => {
       )}
     </main>
   );
+};
+
+Movies.propTypes = {
+  searchedMovies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string,
+    })
+  ),
+  onClickMovie: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };

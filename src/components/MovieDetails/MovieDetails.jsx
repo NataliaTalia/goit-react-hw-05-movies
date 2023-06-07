@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 export const MovieDetails = ({ movie, searchedMovie }) => {
   const [genres, setGenre] = useState();
@@ -88,4 +89,9 @@ export const MovieDetails = ({ movie, searchedMovie }) => {
       <Outlet />
     </main>
   );
+};
+
+MovieDetails.propTypes = {
+  movie: PropTypes.object,
+  searchedMovie: PropTypes.object,
 };
