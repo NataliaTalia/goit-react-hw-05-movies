@@ -86,10 +86,10 @@ export const App = () => {
             <Link to="/movies">Movies</Link>
           </nav>
         </Header>
+
         <Routes>
           <Route
             path="/"
-            index
             element={
               <Home movies={trendingMovies} onClickMovie={handleMovieClick} />
             }
