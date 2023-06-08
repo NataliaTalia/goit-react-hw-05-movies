@@ -6,12 +6,14 @@ import PropTypes from 'prop-types';
 export const MovieDetails = ({ movie, searchedMovie }) => {
   const [genres, setGenre] = useState();
 
-  console.log('Trending movie in movie details component component', movie);
-
   const { poster_path, title, overview, genre_ids, vote_average } =
     searchedMovie ? searchedMovie : movie;
 
-  const movieImage = `https://image.tmdb.org/t/p/w200/${poster_path}`;
+  const placeholder = 'https://placehold.co/200x300/blue/yellow?text=No+Image';
+
+  const movieImage = poster_path
+    ? `https://image.tmdb.org/t/p/w200/${poster_path}`
+    : placeholder;
 
   const fetchGenres = async () => {
     const options = {
@@ -29,7 +31,6 @@ export const MovieDetails = ({ movie, searchedMovie }) => {
       );
 
       const data = await response.json();
-      console.log('returned genres', data);
 
       const genresData = {};
 
@@ -46,10 +47,6 @@ export const MovieDetails = ({ movie, searchedMovie }) => {
     fetchGenres();
   }, [movie, searchedMovie]);
 
-  useEffect(() => {
-    fetchGenres();
-  }, [searchedMovie]);
-
   const genreNames = genre_ids.map(genreId => {
     if (genres && genres[genreId]) {
       return genres[genreId];
@@ -62,7 +59,7 @@ export const MovieDetails = ({ movie, searchedMovie }) => {
   }
   const goBackToPage = searchedMovie ? '/movies?' : '/';
   const navigate = useNavigate();
-  console.log('Genres Name', genreNames);
+
   return (
     <main>
       <button type="button" onClick={() => navigate(goBackToPage)}>

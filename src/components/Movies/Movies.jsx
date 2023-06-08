@@ -3,14 +3,11 @@ import { useSearchParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 export const Movies = ({ onSubmit, searchedMovies, onClickMovie }) => {
-  //   const [movieName, setMovieName] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
 
   const filmName = searchParams.get('name') || '';
-  console.log(filmName);
 
   const handleInput = e => {
-    // setMovieName(e.currentTarget.value.toLowerCase());
     setSearchParams({ name: e.currentTarget.value.toLowerCase() });
   };
 
@@ -18,11 +15,10 @@ export const Movies = ({ onSubmit, searchedMovies, onClickMovie }) => {
     e.preventDefault();
 
     if (filmName.trim() === '') {
-      alert('Please write the name of the movie');
+      alert('PLease write the name of the movie');
       return;
     }
     onSubmit(filmName);
-    // setMovieName('');
   };
   return (
     <main>

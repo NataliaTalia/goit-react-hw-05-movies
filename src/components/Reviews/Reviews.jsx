@@ -37,10 +37,6 @@ export const Reviews = () => {
     fetchReviews();
   }, [id]);
 
-  useEffect(() => {
-    console.log('here are reviews from the state', reviews);
-  }, [reviews]);
-
   function formattedDate(date) {
     const formattedDate = new Date(date).toLocaleString();
 

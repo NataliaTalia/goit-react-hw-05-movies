@@ -31,17 +31,17 @@ export const Cast = () => {
     fetchCredits();
   }, [id]);
 
-  useEffect(() => {
-    console.log('credits fetched From API casting', credits);
-  }, [credits]);
-
   return (
     <ul>
       {credits && credits.length > 0 ? (
         credits.map(({ id, profile_path, name, character }) => (
           <li key={id}>
             <img
-              src={`https://image.tmdb.org/t/p/w200/${profile_path}`}
+              src={
+                profile_path
+                  ? `https://image.tmdb.org/t/p/w200/${profile_path}`
+                  : 'https://placehold.co/200x300/blue/yellow?text=No+Image'
+              }
               alt={name}
             />
             <p>Name: {name}</p>

@@ -61,18 +61,13 @@ export const App = () => {
   }, [movieName]);
 
   const handleMovieClick = movie => {
-    console.log('handleMovieClick called with movie:', movie);
     setSelectedMovie(movie);
-    console.log('selectedMovie in handleMovieClick:', selectedMovie);
   };
 
   const handleSearchedMovieClick = searchedMovie => {
     setSelectedSearchedMovie(searchedMovie);
   };
 
-  console.log('selected movies, checking if it was set', selectedMovie);
-  console.log('movies in Home component:', trendingMovies);
-  console.log('TRENDING MOVIES', trendingMovies);
   const navigate = useNavigate();
 
   return (
