@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trending } from './Home.styled.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { useEffect, useState } from 'react';
 import { getTrendingMovies } from 'components/APIs.js';
@@ -34,6 +34,9 @@ export const Home = () => {
   // const handleSearchedMovieClick = searchedMovie => {
   //   setSelectedSearchedMovie(searchedMovie);
   // };
+
+  const location = useLocation();
+  console.log('location from HOME page');
   return (
     <main>
       <h1>Trending today</h1>

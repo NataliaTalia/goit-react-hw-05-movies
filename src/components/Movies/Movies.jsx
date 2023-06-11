@@ -53,6 +53,7 @@ export const Movies = () => {
   };
 
   const location = useLocation();
+  console.log('location in the search', location);
   return (
     <main>
       <form onSubmit={handleSubmit}>
