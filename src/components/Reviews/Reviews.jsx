@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 export const Reviews = () => {
   const [reviews, setReviews] = useState([]);
 
-  const { id } = useParams();
+  const { movieId } = useParams();
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -19,7 +19,7 @@ export const Reviews = () => {
 
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}/reviews?language=en-US&page=1`,
+          `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US&page=1`,
           options
         );
 
@@ -35,7 +35,7 @@ export const Reviews = () => {
       }
     };
     fetchReviews();
-  }, [id]);
+  }, [movieId]);
 
   function formattedDate(date) {
     const formattedDate = new Date(date).toLocaleString();

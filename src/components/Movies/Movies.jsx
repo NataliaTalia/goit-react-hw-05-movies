@@ -1,14 +1,27 @@
 import { Trending } from '../Home/Home.styled';
 import { useSearchParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
+import { getSearchedMovies } from 'components/APIs';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-export const Movies = ({ onSubmit, searchedMovies, onClickMovie }) => {
+export const Movies = () => {
+  const navigate = useNavigate();
+
   const [searchParams, setSearchParams] = useSearchParams();
+  const [movieName, setMovieName] = useState('');
+  const [selectedSearchedMovie, setSelectedSearchedMovie] = useState([]);
 
   const filmName = searchParams.get('name') || '';
 
+  console.log(filmName);
+  console.log(selectedSearchedMovie);
+
   const handleInput = e => {
-    setSearchParams({ name: e.currentTarget.value.toLowerCase() });
+    if (e.currentTarget.value === '') {
+      setSearchParams({});
+    } else {
+      setSearchParams({ name: e.currentTarget.value.toLowerCase() });
+    }
   };
 
   const handleSubmit = e => {
@@ -18,8 +31,28 @@ export const Movies = ({ onSubmit, searchedMovies, onClickMovie }) => {
       alert('PLease write the name of the movie');
       return;
     }
-    onSubmit(filmName);
+    setMovieName(filmName);
   };
+
+  useEffect(() => {
+    const fetchSearchedMovies = async () => {
+      try {
+        const data = await getSearchedMovies(movieName);
+        console.log(data, 'from fetch by movie name');
+        setSelectedSearchedMovie(data.results);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchSearchedMovies();
+  }, [movieName]);
+
+  const handleMovieClick = movieId => {
+    navigate(`/movies/${movieId}`);
+  };
+
+  const location = useLocation();
   return (
     <main>
       <form onSubmit={handleSubmit}>
@@ -34,15 +67,16 @@ export const Movies = ({ onSubmit, searchedMovies, onClickMovie }) => {
         <button type="submit">Search movie</button>
       </form>
 
-      {searchedMovies && (
+      {selectedSearchedMovie.length > 0 && (
         <div>
           <h1>Here`s what we`ve found:</h1>
 
-          {searchedMovies.map(searchedMovie => (
+          {selectedSearchedMovie.map(searchedMovie => (
             <Trending
               key={searchedMovie.id}
               to={`/movies/${searchedMovie.id}`}
-              onClick={() => onClickMovie(searchedMovie)}
+              onClick={() => handleMovieClick(searchedMovie.id)}
+              state={{ from: location }}
             >
               {searchedMovie.title}
             </Trending>
@@ -51,15 +85,4 @@ export const Movies = ({ onSubmit, searchedMovies, onClickMovie }) => {
       )}
     </main>
   );
-};
-
-Movies.propTypes = {
-  searchedMovies: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      title: PropTypes.string,
-    })
-  ),
-  onClickMovie: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
 };

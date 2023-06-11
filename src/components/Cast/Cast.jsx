@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 export const Cast = () => {
-  const { id } = useParams();
+  const { movieId } = useParams();
   const [credits, setCredits] = useState();
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export const Cast = () => {
 
       try {
         const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}/credits?language=en-US`,
+          `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`,
           options
         );
         const data = await response.json();
@@ -29,7 +29,7 @@ export const Cast = () => {
       }
     };
     fetchCredits();
-  }, [id]);
+  }, [movieId]);
 
   return (
     <ul>

@@ -1,13 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { getMovieDetails } from 'components/APIs';
+import { useParams, useLocation } from 'react-router-dom';
 
-export const MovieDetails = ({ movie, searchedMovie }) => {
-  const [genres, setGenre] = useState();
+export const MovieDetails = () => {
+  const { movieId } = useParams();
+  const [movieDetails, setMovieDetails] = useState(null);
+  const location = useLocation();
 
-  const { poster_path, title, overview, genre_ids, vote_average } =
-    searchedMovie ? searchedMovie : movie;
+  const backLinkLocationRef = useRef(
+    location.state?.from || location.pathname === '/' ? '/movies' : '/'
+  );
+  console.log('REF', backLinkLocationRef);
+  const [genreIds, setGenreIds] = useState([]);
+
+  console.log('location of movie detaisl', location);
+  useEffect(() => {
+    const fetchMovieDetails = async () => {
+      try {
+        const data = await getMovieDetails(movieId);
+        console.log('Movie details from MOVIE DETAILS COMPONENT', data);
+        setMovieDetails(data);
+        if (data && data.genres) {
+          setGenreIds(data.genres);
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchMovieDetails();
+  }, [movieId]);
+
+  const { poster_path, title, overview, vote_average } = movieDetails || {};
 
   const placeholder = 'https://placehold.co/200x300/blue/yellow?text=No+Image';
 
@@ -15,55 +39,17 @@ export const MovieDetails = ({ movie, searchedMovie }) => {
     ? `https://image.tmdb.org/t/p/w200/${poster_path}`
     : placeholder;
 
-  const fetchGenres = async () => {
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyNzhiMWJkMjk1YWUyZGI4YWYzMjhjNWE5ZDQzMGE3NyIsInN1YiI6IjY0N2IxYmE1ZTMyM2YzMDEwNjE1MDc1MCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.vxLHfnX6-9KADyJ-ltI_WHyCFtNAuDJ1qUjAWK6Nndc',
-      },
-    };
-    try {
-      const response = await fetch(
-        'https://api.themoviedb.org/3/genre/movie/list?language=en',
-        options
-      );
-
-      const data = await response.json();
-
-      const genresData = {};
-
-      data.genres.forEach(genre => {
-        genresData[genre.id] = genre.name;
-      });
-
-      setGenre(genresData);
-    } catch (error) {
-      console.error('Error with fetching genres', error);
-    }
-  };
-  useEffect(() => {
-    fetchGenres();
-  }, [movie, searchedMovie]);
-
-  const genreNames = genre_ids.map(genreId => {
-    if (genres && genres[genreId]) {
-      return genres[genreId];
-    }
-    return null;
-  });
+  //
+  const genreNames = genreIds ? genreIds.map(genreId => genreId.name) : [];
 
   function formatAsPercentage(num) {
     return 100 - (100 - num * 10) + '%';
   }
-  const goBackToPage = searchedMovie ? '/movies?' : '/';
-  const navigate = useNavigate();
 
   return (
     <main>
-      <button type="button" onClick={() => navigate(goBackToPage)}>
-        Go back
+      <button type="button">
+        <Link to={backLinkLocationRef.current}>Go back</Link>
       </button>
       <img src={movieImage} alt={title} />
 
@@ -72,7 +58,7 @@ export const MovieDetails = ({ movie, searchedMovie }) => {
       <h3>Overview</h3>
       <p>{overview}</p>
       <h3>Genres</h3>
-      <p>{genreNames.join(', ')}</p>
+      <p>{genreNames.length > 0 ? genreNames.join(', ') : 'No genres found'}</p>
       <hr />
       <p>Additional information</p>
       <ul>
@@ -86,9 +72,4 @@ export const MovieDetails = ({ movie, searchedMovie }) => {
       <Outlet />
     </main>
   );
-};
-
-MovieDetails.propTypes = {
-  movie: PropTypes.object,
-  searchedMovie: PropTypes.object,
 };
