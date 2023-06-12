@@ -1,18 +1,14 @@
 import React from 'react';
 import { Trending } from './Home.styled.js';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useEffect, useState } from 'react';
 import { getTrendingMovies } from 'components/APIs.js';
 
-export const Home = () => {
+const Home = () => {
   const navigate = useNavigate();
 
-  // const [selectedMovie, setSelectedMovie] = useState();
   const [trendingMovies, setTrendingMovies] = useState([]);
-  // const [searchedMovies, setSearchedMovies] = useState(null);
-  // const [movieName, setMovieName] = useState('');
-  //
 
   useEffect(() => {
     const fetchTrendingMovies = async () => {
@@ -31,12 +27,6 @@ export const Home = () => {
     navigate(`/movies/${movieId}`);
   };
 
-  // const handleSearchedMovieClick = searchedMovie => {
-  //   setSelectedSearchedMovie(searchedMovie);
-  // };
-
-  const location = useLocation();
-  console.log('location from HOME page');
   return (
     <main>
       <h1>Trending today</h1>
@@ -53,3 +43,5 @@ export const Home = () => {
     </main>
   );
 };
+
+export default Home;

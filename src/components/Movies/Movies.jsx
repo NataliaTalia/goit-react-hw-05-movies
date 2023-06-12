@@ -1,59 +1,60 @@
 import { Trending } from '../Home/Home.styled';
-import { useSearchParams } from 'react-router-dom';
+
 import { useState, useEffect } from 'react';
 import { getSearchedMovies } from 'components/APIs';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-export const Movies = () => {
+const Movies = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [searchParams, setSearchParams] = useSearchParams();
   const [movieName, setMovieName] = useState('');
   const [selectedSearchedMovie, setSelectedSearchedMovie] = useState([]);
 
-  const filmName = searchParams.get('name') || '';
-
-  console.log(filmName);
   console.log(selectedSearchedMovie);
 
-  const handleInput = e => {
-    if (e.currentTarget.value === '') {
-      setSearchParams({});
-    } else {
-      setSearchParams({ name: e.currentTarget.value.toLowerCase() });
-    }
+  const saveMovieList = movies => {
+    sessionStorage.setItem('movieList', JSON.stringify(movies));
   };
 
-  const handleSubmit = e => {
+  const getMovieList = () => {
+    const movieList = sessionStorage.getItem('movieList');
+    return movieList ? JSON.parse(movieList) : [];
+  };
+
+  const handleInput = e => {
+    setMovieName(e.currentTarget.value);
+  };
+
+  const handleSubmit = async e => {
     e.preventDefault();
 
-    if (filmName.trim() === '') {
+    if (movieName.trim() === '') {
       alert('PLease write the name of the movie');
       return;
     }
-    setMovieName(filmName);
+    try {
+      const data = await getSearchedMovies(movieName);
+      setSelectedSearchedMovie(data.results);
+      saveMovieList(data.results);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   useEffect(() => {
-    const fetchSearchedMovies = async () => {
-      try {
-        const data = await getSearchedMovies(movieName);
-        console.log(data, 'from fetch by movie name');
-        setSelectedSearchedMovie(data.results);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
+    const savedMovieList = getMovieList();
+    setSelectedSearchedMovie(savedMovieList);
+  }, []);
 
-    fetchSearchedMovies();
-  }, [movieName]);
+  useEffect(() => {
+    sessionStorage.removeItem('movieList');
+  }, []);
 
   const handleMovieClick = movieId => {
     navigate(`/movies/${movieId}`);
   };
 
-  const location = useLocation();
-  console.log('location in the search', location);
   return (
     <main>
       <form onSubmit={handleSubmit}>
@@ -62,7 +63,7 @@ export const Movies = () => {
           autoComplete="off"
           autoFocus
           placeholder="Search movies"
-          value={filmName}
+          value={movieName}
           onChange={handleInput}
         />
         <button type="submit">Search movie</button>
@@ -87,3 +88,4 @@ export const Movies = () => {
     </main>
   );
 };
+export default Movies;

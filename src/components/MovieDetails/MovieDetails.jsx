@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { getMovieDetails } from 'components/APIs';
 import { useParams, useLocation } from 'react-router-dom';
+import { Suspense } from 'react';
 
-export const MovieDetails = () => {
+const MovieDetails = () => {
   const { movieId } = useParams();
   const [movieDetails, setMovieDetails] = useState(null);
   const location = useLocation();
@@ -11,7 +12,7 @@ export const MovieDetails = () => {
   const backLinkLocationRef = useRef(
     location.state?.from || location.pathname === '/' ? '/movies' : '/'
   );
-  console.log('REF', backLinkLocationRef);
+
   const [genreIds, setGenreIds] = useState([]);
 
   console.log('location of movie detaisl', location);
@@ -19,7 +20,7 @@ export const MovieDetails = () => {
     const fetchMovieDetails = async () => {
       try {
         const data = await getMovieDetails(movieId);
-        console.log('Movie details from MOVIE DETAILS COMPONENT', data);
+
         setMovieDetails(data);
         if (data && data.genres) {
           setGenreIds(data.genres);
@@ -49,7 +50,7 @@ export const MovieDetails = () => {
   return (
     <main>
       <button type="button">
-        <Link to={backLinkLocationRef.current}>Go back</Link>
+        <Link to={backLinkLocationRef.current}> Go back</Link>
       </button>
       <img src={movieImage} alt={title} />
 
@@ -69,7 +70,11 @@ export const MovieDetails = () => {
           <Link to="reviews">Reviews</Link>
         </li>
       </ul>
-      <Outlet />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Outlet />
+      </Suspense>
     </main>
   );
 };
+
+export default MovieDetails;
