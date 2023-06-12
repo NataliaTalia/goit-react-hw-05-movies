@@ -15,7 +15,6 @@ const MovieDetails = () => {
 
   const [genreIds, setGenreIds] = useState([]);
 
-  console.log('location of movie detaisl', location);
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {

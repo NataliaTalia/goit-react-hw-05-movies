@@ -47,9 +47,9 @@ const Movies = () => {
     setSelectedSearchedMovie(savedMovieList);
   }, []);
 
-  useEffect(() => {
-    sessionStorage.removeItem('movieList');
-  }, []);
+  // useEffect(() => {
+  //   sessionStorage.removeItem('movieList');
+  // }, []);
 
   const handleMovieClick = movieId => {
     navigate(`/movies/${movieId}`);
